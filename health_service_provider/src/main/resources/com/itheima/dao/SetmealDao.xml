@@ -28,5 +28,9 @@
         </if>
     </select>
 
+    <select id="getAllSetmeal" resultType="com.itheima.pojo.Setmeal">
+        select * from t_setmeal
+    </select>
+
 </mapper>
 
