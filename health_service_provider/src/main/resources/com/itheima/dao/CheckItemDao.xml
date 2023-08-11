@@ -4,6 +4,8 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.itheima.dao.CheckItemDao">
 
+
+
     <insert id="add" parameterType="com.itheima.pojo.CheckItem">
         insert into t_checkitem(code, name, sex, age, price, type, remark, attention)
         values (#{code}, #{name}, #{sex}, #{age}, #{price}, #{type}, #{remark}, #{attention})
@@ -67,6 +69,11 @@
 
     <select id="findAll" resultType="com.itheima.pojo.CheckItem">
         select * from t_checkitem
+    </select>
+
+    <select id="findCheckItemById" parameterType="int" resultType="com.itheima.pojo.CheckItem">
+        select * from t_checkitem where id in (select checkitem_id from t_checkgroup_checkitem where
+            checkgroup_id=#{id})
     </select>
 </mapper>
 

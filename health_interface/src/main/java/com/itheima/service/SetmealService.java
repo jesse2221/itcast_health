@@ -15,4 +15,6 @@ public interface SetmealService {
     PageResult findPageCondition(QueryPageBean queryPageBean);
 
     List<Setmeal> getAllSetmeal();
+
+    Setmeal findById(int id);
 }

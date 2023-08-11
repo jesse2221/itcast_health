@@ -32,15 +32,14 @@ public class SetmealController {
         }
     }
 
-   /* //根据套餐ID查询套餐详情（套餐基本信息、套餐对应的检查组信息、检查组对应的检查项信息）
-    @RequestMapping("/findById")
+   @RequestMapping("/findById")
     public Result findById(int id){
-        try{
-            Setmeal setmeal = setmealService.findById(id);
-            return new Result(true, MessageConstant.QUERY_SETMEAL_SUCCESS,setmeal);
-        }catch (Exception e){
-            e.printStackTrace();
-            return new Result(false, MessageConstant.QUERY_SETMEAL_FAIL);
-        }
-    }*/
+       try {
+           Setmeal setmeal=setmealService.findById(id);
+           return new Result(true,MessageConstant.QUERY_SETMEALLIST_SUCCESS,setmeal);
+       } catch (Exception e) {
+           e.printStackTrace();
+           return new Result(false,MessageConstant.QUERY_SETMEALLIST_FAIL);
+       }
+   }
 }
