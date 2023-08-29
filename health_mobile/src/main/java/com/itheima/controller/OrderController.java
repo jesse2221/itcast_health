@@ -35,11 +35,11 @@ public class OrderController {
         //从redis中获取保存的验证码
         String codeInRedis = jedisPool.getResource().get(telephone + RedisMessageConstant.SENDTYPE_ORDER);
         //将用户输入的验证码和redis中保存的验证码进行比对
-        Result result=null;
-        if(validateCode!=null && codeInRedis!=null && validateCode.equals(codeInRedis)){
+        Result result = null;
+        if (validateCode != null && codeInRedis != null && validateCode.equals(codeInRedis)) {
             //如果比对成功，调用服务完成业务预约处理
             try {
-                map.put("orderType",Order.ORDERTYPE_WEIXIN);//设置预约途径
+                map.put("orderType", Order.ORDERTYPE_WEIXIN);//设置预约途径
                 result = orderService.order(map);//远程调用有超时风险
             } catch (Exception e) {
                 e.printStackTrace();
@@ -51,9 +51,20 @@ public class OrderController {
                 e.printStackTrace();
             }*/
             return result;
-        }else {
+        } else {
             //如果比对失败，返回结果给页面
-            return new Result(false,MessageConstant.VALIDATECODE_ERROR);
+            return new Result(false, MessageConstant.VALIDATECODE_ERROR);
+        }
+    }
+
+    @RequestMapping("/findById")
+    public Result findById(Integer id) {
+        try {
+            Map map = orderService.findById(id);
+            return new Result(true, MessageConstant.QUERY_ORDER_SUCCESS, map);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Result(false, MessageConstant.QUERY_ORDER_SUCCESS);
         }
     }
 }

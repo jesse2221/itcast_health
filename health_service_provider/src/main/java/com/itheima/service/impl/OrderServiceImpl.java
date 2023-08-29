@@ -39,31 +39,31 @@ public class OrderServiceImpl implements OrderService {
         String orderDate = (String) map.get("orderDate");
         Date date = DateUtils.parseString2Date(orderDate);
         OrderSetting orderSetting = orderSettingDao.findByOrderDate(date);
-        if(orderSetting==null){
+        if (orderSetting == null) {
             return new Result(false, MessageConstant.SELECTED_DATE_CANNOT_ORDER);
         }
 
         //2、检查用户所选择的预约日期是否已经约满，如果已经约满则无法预约
         int number = orderSetting.getNumber();
         int reservations = orderSetting.getReservations();
-        if(reservations>=number){
-            return new Result(false,MessageConstant.ORDER_FULL);
+        if (reservations >= number) {
+            return new Result(false, MessageConstant.ORDER_FULL);
         }
 
         //3、检查用户是否重复预约（同一个用户在同一天预约了同一个套餐），如果是重复预约则无法完成再次预约
         Member member = memberDao.findByTelephone((String) map.get("telephone"));
-        if(member!=null){
+        if (member != null) {
             Integer memberId = member.getId();
             int setmealId = Integer.parseInt((String) map.get("setmealId"));
-            Order order=new Order(memberId,date,setmealId);
+            Order order = new Order(memberId, date, setmealId);
             List<Order> list = orderDao.findByCondition(order);
-            if(list!=null && list.size()>0){
-                return new Result(false,MessageConstant.HAS_ORDERED);
+            if (list != null && list.size() > 0) {
+                return new Result(false, MessageConstant.HAS_ORDERED);
             }
-        }else {
+        } else {
             //4、检查当前用户是否为会员，如果是会员则直接完成预约，如果不是会员则自动完成注册并进行预约
             //当前用户不是会员，需要添加到会员表
-            member=new Member();
+            member = new Member();
             member.setPhoneNumber((String) map.get("telephone"));
             member.setName((String) map.get("name"));
             member.setIdCard((String) map.get("idCard"));
@@ -80,9 +80,18 @@ public class OrderServiceImpl implements OrderService {
         order.setSetmealId(Integer.parseInt((String) map.get("setmealId")));
         orderDao.add(order);
 
-        orderSetting.setReservations(orderSetting.getReservations()+1);
+        orderSetting.setReservations(orderSetting.getReservations() + 1);
         orderSettingDao.editReservationsByOrderDate(orderSetting);
 
-        return new Result(true,MessageConstant.ORDER_SUCCESS,order.getId());
+        return new Result(true, MessageConstant.ORDER_SUCCESS, order.getId());
+    }
+
+    public Map findById(Integer id) throws Exception{
+        Map map = orderDao.findById4Detail(id);
+        if (map != null) {
+            Date orderDate = (Date) map.get("orderDate");
+            map.put("orderDate",DateUtils.parseDate2String(orderDate));
+        }
+        return map;
     }
 }
