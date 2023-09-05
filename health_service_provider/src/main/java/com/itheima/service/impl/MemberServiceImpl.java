@@ -6,6 +6,9 @@ import com.itheima.pojo.Member;
 import com.itheima.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @Author
  * @create 2023/8/29 16:07
@@ -22,5 +25,15 @@ public class MemberServiceImpl implements MemberService {
 
     public void add(Member member) {
         memberDao.add(member);
+    }
+
+    public List<Integer> findMemberCountByMonth(List<String> mouth) {
+        List<Integer> memberCount = new ArrayList<Integer>();
+        for (String date : mouth) {
+            date+=".31";//格式：2019.04.31
+            Integer count = memberDao.findMemberCountBeforeDate(date);
+            memberCount.add(count);
+        }
+        return memberCount;
     }
 }
