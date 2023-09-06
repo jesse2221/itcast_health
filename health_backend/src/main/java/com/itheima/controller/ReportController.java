@@ -48,6 +48,33 @@ public class ReportController {
         return new Result(true, MessageConstant.GET_MEMBER_NUMBER_REPORT_SUCCESS,map);
     }
 
+    @RequestMapping("/getSetmealReport")
+    public Result getSetmealReport(){
+        Map map = new HashMap();
+        List setmealNames=new ArrayList();
+        setmealNames.add("套餐1");
+        setmealNames.add("套餐2");
+        setmealNames.add("套餐3");
+        map.put("setmealNames",setmealNames);
+
+        List<Map> setmealCount = new ArrayList();
+        Map map1=new HashMap();
+        map1.put("name","套餐1");
+        map1.put("value",10);
+        setmealCount.add(map1);
+        Map map2=new HashMap();
+        map2.put("name","套餐2");
+        map2.put("value",32);
+        setmealCount.add(map2);
+        Map map3=new HashMap();
+        map3.put("name","套餐3");
+        map3.put("value",32);
+        setmealCount.add(map3);
+        map.put("setmealCount",setmealCount);
+        // setmealCount.add()
+        return new Result(true,MessageConstant.GET_SETMEAL_COUNT_REPORT_SUCCESS,map);
+    }
+
 }
 
 
