@@ -4,8 +4,8 @@ import com.alibaba.dubbo.config.annotation.Reference;
 import com.itheima.constant.MessageConstant;
 import com.itheima.entity.Result;
 import com.itheima.service.MemberService;
+import com.itheima.service.ReportService;
 import com.itheima.service.SetmealService;
-import com.itheima.utils.DateUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -25,6 +25,8 @@ public class ReportController {
     private MemberService memberService;
     @Reference
     private SetmealService setmealService;
+    @Reference
+    private ReportService reportService;
 
     @RequestMapping("/getMemberReport")
     public Result getMemberReport(){
@@ -68,6 +70,18 @@ public class ReportController {
             e.printStackTrace();
             return new Result(true,MessageConstant.GET_SETMEAL_COUNT_REPORT_FAIL);
         }
+    }
+
+    @RequestMapping("/getBusinessReportData")
+    public Result getBusinessReportData(){
+        try {
+            Map<String,Object> map = reportService.getBusinessReportData();
+            return new Result(true,MessageConstant.GET_BUSINESS_REPORT_SUCCESS,map);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Result(true,MessageConstant.GET_BUSINESS_REPORT_FAIL);
+        }
+
     }
 
 }
