@@ -4,6 +4,7 @@ import com.alibaba.dubbo.config.annotation.Reference;
 import com.itheima.constant.MessageConstant;
 import com.itheima.entity.Result;
 import com.itheima.service.MemberService;
+import com.itheima.service.SetmealService;
 import com.itheima.utils.DateUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,6 +23,8 @@ import java.util.*;
 public class ReportController {
     @Reference
     private MemberService memberService;
+    @Reference
+    private SetmealService setmealService;
 
     @RequestMapping("/getMemberReport")
     public Result getMemberReport(){
@@ -50,29 +53,21 @@ public class ReportController {
 
     @RequestMapping("/getSetmealReport")
     public Result getSetmealReport(){
-        Map map = new HashMap();
-        List setmealNames=new ArrayList();
-        setmealNames.add("套餐1");
-        setmealNames.add("套餐2");
-        setmealNames.add("套餐3");
-        map.put("setmealNames",setmealNames);
-
-        List<Map> setmealCount = new ArrayList();
-        Map map1=new HashMap();
-        map1.put("name","套餐1");
-        map1.put("value",10);
-        setmealCount.add(map1);
-        Map map2=new HashMap();
-        map2.put("name","套餐2");
-        map2.put("value",32);
-        setmealCount.add(map2);
-        Map map3=new HashMap();
-        map3.put("name","套餐3");
-        map3.put("value",32);
-        setmealCount.add(map3);
-        map.put("setmealCount",setmealCount);
-        // setmealCount.add()
-        return new Result(true,MessageConstant.GET_SETMEAL_COUNT_REPORT_SUCCESS,map);
+        try {
+            List<Map<String,Object>> setmealCount  = setmealService.findSetmealCount();
+            Map SetmealReportMap = new HashMap();
+            SetmealReportMap.put("setmealCount",setmealCount);
+            List setmealNames = new ArrayList();
+            for (Map<String, Object> map : setmealCount) {
+                String name = (String) map.get("name");
+                setmealNames.add(name);
+            }
+            SetmealReportMap.put("setmealNames",setmealNames);
+            return new Result(true,MessageConstant.GET_SETMEAL_COUNT_REPORT_SUCCESS,SetmealReportMap);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Result(true,MessageConstant.GET_SETMEAL_COUNT_REPORT_FAIL);
+        }
     }
 
 }

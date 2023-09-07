@@ -61,5 +61,9 @@
         where id = #{id}
     </select>
 
+    <select id="findSetmealCount" resultType="map">
+        select s.name,count(o.id) as value from t_order o,t_setmeal s where o.setmeal_id=s.id GROUP BY o.setmeal_id
+    </select>
+
 </mapper>
 
